@@ -1,0 +1,35 @@
+text = """최근 정부 주도 디지털뉴딜 사업인 확장현실(XR) 메타버스 프로젝트는 증강현실(AR) 플랫폼 분야의 주도 기업이 추진할 것으로 예상된다.""" 
+
+!pip install koalanlp
+
+from koalanlp.Util import initialize, finalize
+from koalanlp.proc import *
+from koalanlp import API
+
+initialize(java_options="-Xmx4g -Dfile.encoding=utf-8", EUNJEON="LATEST", ETRI="LATEST")
+
+tagger = Tagger(API.EUNJEON)
+tagged = tagger.tag(text)
+print(tagged[0].singleLineString())
+
+
+
+tagger = Tagger(API.ETRI, etri_key='4409fdbe-0408-48b6-9119-1cf24571a3b0')
+tagged = tagger.tag(text)
+print(tagged[0].singleLineString()) 
+
+
+from koalanlp.types import POS
+from koalanlp.proc import Dictionary
+dictionary = Dictionary(API.EUNJEON)
+dictionary.addUserDictionary(("메타버스", POS.NNG)) 
+dictionary.addUserDictionary(("확장현실", POS.NNG), ("메타버스", POS.NNG)) 
+print(dictionary.getItems())
+
+
+tagger = Tagger(API.EUNJEON)
+tagged = tagger.tag(text)
+print(tagged[0].singleLineString())
+
+
+finalize()
